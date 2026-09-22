@@ -1,0 +1,13 @@
+# Placeholder — regenerate this from the actual PlantVillage folder names during
+# Week 2 data exploration, e.g.:
+#   ls data/raw/PlantVillage > configs/class_names.txt
+Apple___Apple_scab
+Apple___Black_rot
+Apple___Cedar_apple_rust
+Apple___healthy
+Corn___Common_rust
+Corn___Northern_Leaf_Blight
+Corn___healthy
+Tomato___Early_blight
+Tomato___Late_blight
+Tomato___healthy

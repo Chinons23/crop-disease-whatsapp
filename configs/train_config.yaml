@@ -1,0 +1,13 @@
+# Training configuration for the crop disease classifier
+
+data_root: "data/processed/train"   # path to class-per-folder training images
+image_size: 224
+batch_size: 32
+num_workers: 2
+val_split: 0.15
+
+backbone: "mobilenetv3_small_100"   # small/fast — good for WhatsApp bot latency
+epochs: 15
+lr: 0.0003
+
+checkpoint_path: "models/checkpoints/best_model.pt"
