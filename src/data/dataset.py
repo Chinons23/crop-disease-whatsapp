@@ -1,7 +1,7 @@
 """PyTorch Dataset for the PlantVillage crop disease dataset."""
 
 from pathlib import Path
-from typing import Callable, Optional
+from typing import Callable
 
 from PIL import Image
 from torch.utils.data import Dataset
@@ -19,22 +19,23 @@ class PlantVillageDataset(Dataset):
                 ...
     """
 
-    def __init__(self, root: str, transform: Optional[Callable] = None):
+    def __init__(self, root: str | Path, transform: Callable | None = None):
         self.root = Path(root)
         self.transform = transform
 
         self.classes = sorted(p.name for p in self.root.iterdir() if p.is_dir())
         self.class_to_idx = {cls_name: i for i, cls_name in enumerate(self.classes)}
 
-        self.samples = []
+        self.samples: list[tuple[Path, int]] = []
         for cls_name in self.classes:
             cls_dir = self.root / cls_name
-            for img_path in cls_dir.glob("*"):
+            for img_path in sorted(cls_dir.glob("*")):
                 if img_path.suffix.lower() in {".jpg", ".jpeg", ".png"}:
                     self.samples.append((img_path, self.class_to_idx[cls_name]))
 
         if not self.samples:
             raise RuntimeError(f"No images found under {self.root}")
+        self.targets = [label for _, label in self.samples]
 
     def __len__(self) -> int:
         return len(self.samples)

@@ -51,17 +51,26 @@ cd crop-disease-whatsapp
 # environment
 python -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+python -m pip install -e .
 
 # get the dataset
 bash scripts/download_data.sh
 
-# train (once src/models/train.py is implemented)
+# train the model; the configured data root is data/raw/PlantVillage
 python -m src.models.train --config configs/train_config.yaml
 
 # run inference demo
 python scripts/run_inference_demo.py --image path/to/leaf.jpg
 ```
+
+The notebook at `notebooks/plant-disease-classifier.ipynb` uses the same package
+modules for data splitting, training, quality checks, and artifact export. Set
+`PLANTVILLAGE_PATH` if the dataset is stored somewhere other than
+`data/raw/PlantVillage`.
+
+Training saves the selected model artifact to the configured
+`checkpoint_path` (by default, `models/checkpoints/best_model.pt`). Checkpoints are
+gitignored, so they remain on your machine and do not appear in Git status.
 
 ## Team
 | Name | Role | Responsibilities |

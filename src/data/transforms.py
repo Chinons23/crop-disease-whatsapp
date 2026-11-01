@@ -11,18 +11,29 @@ def get_train_transforms(image_size: int = 224) -> transforms.Compose:
         [
             transforms.RandomResizedCrop(image_size, scale=(0.8, 1.0)),
             transforms.RandomHorizontalFlip(),
+            transforms.RandomVerticalFlip(),
+            transforms.ColorJitter(
+                brightness=0.2,
+                contrast=0.2,
+                saturation=0.1,
+                hue=0.04,
+            ),
             transforms.RandomRotation(15),
-            transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2),
             transforms.ToTensor(),
             transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
         ]
     )
 
 
-def get_eval_transforms(image_size: int = 224) -> transforms.Compose:
+def get_eval_transforms(
+    image_size: int = 224,
+    resize_size: int | None = None,
+) -> transforms.Compose:
+    if resize_size is None:
+        resize_size = 256
     return transforms.Compose(
         [
-            transforms.Resize(int(image_size * 1.14)),
+            transforms.Resize(resize_size),
             transforms.CenterCrop(image_size),
             transforms.ToTensor(),
             transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),

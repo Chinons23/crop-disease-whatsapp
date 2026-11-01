@@ -20,12 +20,13 @@ data/raw/
     └── ... (38 classes total)
 ```
 
-## Processed splits
-Run the EDA notebook (`notebooks/01_eda.ipynb`) to generate train/val/test splits
-into `data/processed/`. This directory is gitignored — regenerate it locally rather
-than committing images.
+## Train/validation/test splits
+The notebook (`notebooks/plant-disease-classifier.ipynb`) creates reproducible,
+stratified train/validation/test subsets directly from the raw class folders. It
+does not copy or modify image files. The training configuration uses the same
+source directory by default; set `PLANTVILLAGE_PATH` to override it.
 
 ## Notes
 - Document class imbalance, image quality issues, and any mislabeled samples found
-  during Week 2 exploration directly in the EDA notebook.
-- Keep raw data untouched; all cleaning happens on the way into `data/processed/`.
+  during Week 2 exploration directly in the notebook.
+- Keep raw data untouched; preprocessing and splits are applied when images are loaded.

@@ -1,13 +1,27 @@
 # Training configuration for the crop disease classifier
 
-data_root: "data/processed/train"   # path to class-per-folder training images
+data_root: "data/raw/PlantVillage"  # class-per-folder PlantVillage images
 image_size: 224
+resize_size: 256
 batch_size: 32
 num_workers: 2
+train_split: 0.70
 val_split: 0.15
+seed: 42
 
-backbone: "mobilenetv3_small_100"   # small/fast — good for WhatsApp bot latency
-epochs: 15
-lr: 0.0003
+backbone: "mobilenet_v3_small"  # torchvision MobileNetV3-Small
+pretrained: true
+freeze_backbone: true
+epochs: 10
+patience: 3
+lr: 0.001
+train_baseline: false
 
 checkpoint_path: "models/checkpoints/best_model.pt"
+
+quality_gate:
+  min_brightness: 0.12
+  max_brightness: 0.92
+  min_contrast: 0.05
+  min_blur_score: 0.002
+  min_leaf_fraction: 0.08
