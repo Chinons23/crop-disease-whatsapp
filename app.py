@@ -1,13 +1,12 @@
 """Plant Disease Classifier - Streamlit app.
 
-Loads the artifact exported by `plant-disease-classifier-corrected.ipynb`
-(`plant_disease_mobilenetv3.pt`), checks photo quality, and classifies the leaf.
+Loads the trained model artifact, checks photo quality, and classifies the leaf.
 
 Run:
     streamlit run app.py
 
 Environment variables (optional):
-    MODEL_ARTIFACT  Path to the .pt artifact. Defaults to ./plant_disease_mobilenetv3.pt
+    MODEL_ARTIFACT  Path to the .pt artifact. Defaults to output/models/checkpoints/best_model.pt
 """
 import logging
 import os
@@ -29,7 +28,7 @@ st.set_page_config(page_title="Plant Disease Classifier", page_icon="🌿", layo
 logger = logging.getLogger("plant_disease_app")
 
 # Configuration
-artifact_path = Path(os.environ.get("MODEL_ARTIFACT", "plant_disease_mobilenetv3.pt"))
+artifact_path = Path(os.environ.get("MODEL_ARTIFACT", "output/models/checkpoints/best_model.pt"))
 max_upload_mb = 10
 Image.MAX_IMAGE_PIXELS = 50_000_000     # Protects against decompression-bomb images.
 top_k = 3
@@ -263,7 +262,7 @@ def analyse(image: Image.Image, bundle: ModelBundle):
 
 # User interface
 def main() -> None:
-    st.title("🌿 Plant Disease Classifier")
+    st.title("Plant Disease Classifier")
     st.caption("Upload or capture a photo of a single leaf to get a suggested diagnosis.")
 
     try:
@@ -293,7 +292,7 @@ def main() -> None:
                    "Real field photos are usually harder.")
 
     # Input
-    upload_tab, camera_tab = st.tabs(["📁 Upload photo", "📷 Use camera"])
+    upload_tab, camera_tab = st.tabs(["Upload photo", "Use camera"])
     with upload_tab:
         uploaded_file = st.file_uploader("Choose a leaf photo", type=["jpg", "jpeg", "png"])
     with camera_tab:

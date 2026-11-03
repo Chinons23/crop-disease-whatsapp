@@ -13,24 +13,20 @@ dependencies = [
     "numpy>=1.26",
     "pandas>=2.2",
     "pillow>=10.2",
-
     # Experiment / config
     "pyyaml>=6.0",
     "tqdm>=4.66",
-
     # Web / bot
     "fastapi>=0.110",
     "uvicorn[standard]>=0.29",
     "twilio>=9.0",
     "python-multipart>=0.0.9",
     "requests>=2.31",
-
     # Notebooks / EDA
     "jupyter>=1.0",
     "matplotlib>=3.8",
     "seaborn>=0.13",
-
     # Testing
     "pytest>=8.0",
-
+    "streamlit>=1.66.1",
 ]

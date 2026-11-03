@@ -1,6 +1,6 @@
 # Training configuration for the crop disease classifier
 
-data_root: "data/raw/PlantVillage"  # class-per-folder PlantVillage images
+data_root: "/kaggle/input/plantvillage-dataset/color"  # Path to the dataset root directory on Kaggle
 image_size: 224
 resize_size: 256
 batch_size: 32

@@ -31,3 +31,4 @@ models/checkpoints/*
 wandb/
 runs/
 uv.lock
+kernel-*.json

@@ -1,0 +1,22 @@
+backbone: mobilenet_v3_small
+batch_size: 32
+checkpoint_path: models/checkpoints/best_model.pt
+data_root: /kaggle/input/plantvillage-dataset/color
+epochs: 10
+freeze_backbone: true
+image_size: 224
+lr: 0.001
+num_workers: 2
+patience: 3
+pretrained: true
+quality_gate:
+  max_brightness: 0.92
+  min_blur_score: 0.002
+  min_brightness: 0.12
+  min_contrast: 0.05
+  min_leaf_fraction: 0.08
+resize_size: 256
+seed: 42
+train_baseline: false
+train_split: 0.7
+val_split: 0.15
