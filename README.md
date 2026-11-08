@@ -74,6 +74,94 @@ Training saves the artifact to the configured `checkpoint_path` (by default
 `models/checkpoints/best_model.pt`). Set `MODEL_ARTIFACT` to that file before
 starting the app. Checkpoints are ignored by Git and must be provided separately.
 
+## Train on Kaggle with the CLI
+
+Use Kaggle's hosted notebook compute if you do not have room for PlantVillage or
+a GPU locally. The dataset stays on Kaggle; only the trained model needs to be
+downloaded to run the app on your computer. Kaggle GPU availability and usage
+quotas depend on your account.
+
+1. Install the CLI and authenticate with your Kaggle account:
+
+   ```bash
+   pip install kaggle
+   kaggle auth login
+   ```
+
+   Alternatively, create an API token in your Kaggle account settings and follow
+   Kaggle's instructions to configure it locally. Never commit the token or put
+   it in a dataset.
+
+2. Create a clean staging folder (for example, `kaggle-source/` at the
+   repository root) for the project source dataset. Copy only `main.py`,
+   `configs/`, and `src/` into it; do not upload `.env`, `.venv`, `data/`,
+   `output/`, model checkpoints, or other private/local files. From that folder,
+   initialize and create the dataset:
+
+   ```bash
+   kaggle datasets init -p .
+   ```
+
+   Edit the generated `dataset-metadata.json` with your Kaggle account and a
+   dataset slug, then publish it:
+
+   ```bash
+   kaggle datasets create -p .
+   ```
+
+   Keep this folder for later updates. After changing the source files, publish
+   a new version with `kaggle datasets version -p . -m "Update project code"`.
+
+3. Make a separate folder (for example, `kaggle-kernel/` at the repository
+   root), copy `run_kaggle.ipynb` into it, and initialize its metadata:
+
+   ```bash
+   kaggle kernels init -p .
+   ```
+
+   Edit `kernel-metadata.json`: set `id` to
+   `your-kaggle-username/your-kernel-slug`, set `code_file` to
+   `run_kaggle.ipynb`, add both your project dataset and
+   `abdallahalidev/plantvillage-dataset` to `dataset_sources`, and set
+   `enable_gpu` to `"true"`. The checked-in metadata uses this repository
+   owner's Kaggle IDs; replace them if you publish under your own account.
+
+   Before pushing, update the notebook's `base` path to your mounted project
+   dataset directory (`/kaggle/input/<your-project-dataset-slug>`). In the
+   notebook cell that writes `/kaggle/working/train_config.yaml`, set
+   `cfg["checkpoint_path"]` to
+   `"/kaggle/working/models/checkpoints/best_model.pt"` before saving the
+   config. Kaggle input datasets are read-only, so the checkpoint must be
+   written under `/kaggle/working` for it to be available as a kernel output.
+   The notebook already locates the PlantVillage `color` directory in Kaggle's
+   mounted inputs.
+
+4. From the kernel folder, push the notebook to Kaggle and check its run:
+
+   ```bash
+   kaggle kernels push -p .
+   kaggle kernels status your-kaggle-username/your-kernel-slug
+   ```
+
+   Once the run has completed successfully, download its output files to the
+   repo's `output/kaggle/` folder (run this command from `kaggle-kernel/`):
+
+   ```bash
+   kaggle kernels output your-kaggle-username/your-kernel-slug -p ../output/kaggle
+   ```
+
+   Find `best_model.pt` under `output/kaggle/` and set `MODEL_ARTIFACT` to its
+   location before running the app. For example, in Windows PowerShell:
+
+   ```powershell
+   $env:MODEL_ARTIFACT = "output/kaggle/models/checkpoints/best_model.pt"
+   uv run streamlit run app.py
+   ```
+
+   If you update the source dataset later, publish its new version first, then
+   push the kernel again. Ensure your Kaggle account has access to the
+   PlantVillage dataset before running the notebook.
+
 ## Deploy on Hugging Face Spaces
 
 1. Create a Space and select the **Streamlit** SDK. This README declares the
