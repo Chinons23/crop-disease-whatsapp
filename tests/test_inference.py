@@ -2,9 +2,18 @@ from PIL import Image
 import numpy as np
 import torch.nn as nn
 
-from src.inference.artifacts import save_model_artifact
+from src.inference.artifacts import read_test_metrics, save_model_artifact
 from src.inference import predict as predict_module
 from src.inference.predict import DiseasePredictor, format_prediction_for_whatsapp
+
+
+def test_read_test_metrics_supports_nested_and_legacy_artifacts():
+    assert read_test_metrics(
+        {"metrics": {"test_accuracy": 95.2, "test_macro_f1": 0.9381}}
+    ) == (95.2, 0.9381)
+    assert read_test_metrics(
+        {"test_accuracy": 91.0, "test_macro_f1": 0.89}
+    ) == (91.0, 0.89)
 
 
 def test_format_prediction_single_result():

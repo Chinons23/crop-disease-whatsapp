@@ -22,6 +22,8 @@ from PIL import Image, ImageOps, UnidentifiedImageError
 from torchvision.models import mobilenet_v3_small
 from torchvision.transforms import v2
 
+from src.inference.artifacts import read_test_metrics
+
 # Must be the first Streamlit call.
 st.set_page_config(page_title="Plant Disease Classifier", page_icon="🌿", layout="wide")
 
@@ -191,6 +193,7 @@ def load_bundle(path_str: str) -> ModelBundle:
         v2.ToDtype(torch.float32, scale=True),
         v2.Normalize(mean=artifact["mean"], std=artifact["std"]),
     ])
+    test_accuracy, test_macro_f1 = read_test_metrics(artifact)
 
     return ModelBundle(
         model=model,
@@ -199,8 +202,8 @@ def load_bundle(path_str: str) -> ModelBundle:
         class_names=class_names,
         mean=artifact["mean"],
         std=artifact["std"],
-        test_accuracy=artifact.get("test_accuracy"),
-        test_macro_f1=artifact.get("test_macro_f1"),
+        test_accuracy=test_accuracy,
+        test_macro_f1=test_macro_f1,
     )
 
 

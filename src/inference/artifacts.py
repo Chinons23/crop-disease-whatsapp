@@ -1,5 +1,6 @@
 """Helpers for saving deployment-ready model artifacts."""
 
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
@@ -7,6 +8,26 @@ import torch
 from torch import nn
 
 from src.data.transforms import IMAGENET_MEAN, IMAGENET_STD
+
+
+def read_test_metrics(
+    artifact: Mapping[str, Any],
+) -> tuple[float | None, float | None]:
+    """Read test metrics from current artifacts or legacy top-level fields."""
+    metrics = artifact.get("metrics", {})
+    if not isinstance(metrics, Mapping):
+        raise ValueError("Artifact metrics must be a mapping")
+
+    accuracy = artifact.get("test_accuracy")
+    macro_f1 = artifact.get("test_macro_f1")
+    if accuracy is None:
+        accuracy = metrics.get("test_accuracy")
+    if macro_f1 is None:
+        macro_f1 = metrics.get("test_macro_f1")
+    return (
+        None if accuracy is None else float(accuracy),
+        None if macro_f1 is None else float(macro_f1),
+    )
 
 
 def save_model_artifact(
