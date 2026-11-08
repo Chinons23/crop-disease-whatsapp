@@ -1,6 +1,5 @@
 ---
 title: Crop Disease Classifier
-emoji: 🌿
 colorFrom: green
 colorTo: yellow
 sdk: streamlit
